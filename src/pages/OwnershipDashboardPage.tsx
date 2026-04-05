@@ -1,306 +1,164 @@
-import React, { useState, useMemo } from 'react';
-import {
-  PageHeader,
-  SectionHeader,
-  SummaryCard,
-  OwnershipTable,
-  FilterBar,
-  StatusBadge,
-} from '../components';
-import { pipelines } from '../data/pipelines';
-import { teamMembers } from '../data/teams';
+type Status = 'Confirmed' | 'In Progress' | 'Assigning' | 'Not Yet Filled';
 
-const OwnershipDashboardPage: React.FC = () => {
-  // Filter states
-  const [areaFilter, setAreaFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+interface Pipeline {
+  name: string;
+  area: string;
+  owners: string;
+  contributors: string;
+  status: Status;
+  milestone: string;
+}
 
-  // Calculate summary metrics
-  const activePipelinesCount = pipelines.length;
+const pipelines: Pipeline[] = [
+  { name: 'Biosecurity Circuit', area: 'Wetlab', owners: 'Assigning', contributors: 'Wetlab Group A', status: 'Assigning' as const, milestone: 'Concept comparison' },
+  { name: 'Stress Circuit', area: 'Wetlab', owners: 'Assigning', contributors: 'Wetlab Group A', status: 'In Progress' as const, milestone: 'E. coli cloning' },
+  { name: 'Model Establishing', area: 'Wetlab', owners: 'Assigning', contributors: 'Wetlab Group B', status: 'In Progress' as const, milestone: 'B. subtilis culture' },
+  { name: 'Protectant Development', area: 'Wetlab/Drylab', owners: 'Assigning', contributors: 'Wetlab Group B + Drylab', status: 'In Progress' as const, milestone: 'Protectant evaluation' },
+  { name: 'Hydroponic System', area: 'Drylab', owners: 'Anton Lin, Ethan Liu, Noah Tau', contributors: 'Felix Yu, Anna Chuang', status: 'Confirmed' as const, milestone: 'Prototype v2' },
+  { name: 'Soil Metric Hardware', area: 'Drylab', owners: 'Anton Lin, Noah Tau', contributors: 'Anna Chuang, Jacquelyn', status: 'Confirmed' as const, milestone: 'Sensor calibration' },
+  { name: 'Gene Circuit Design', area: 'Drylab', owners: 'Jacquelyn, Felix Yu', contributors: 'Audrey Chu, Eva Zhong, Ethan Liu', status: 'Confirmed' as const, milestone: 'Logic diagram v1' },
+  { name: 'Math Model', area: 'Drylab', owners: 'Ethan Liu, Anna Chuang', contributors: 'TBD', status: 'Confirmed' as const, milestone: 'Model framework' },
+  { name: 'Business Plan', area: 'HP', owners: 'Assigning', contributors: 'HP Core Group', status: 'Assigning' as const, milestone: 'Market analysis' },
+  { name: 'Wiki Setup', area: 'HP', owners: 'Assigning', contributors: 'HP Core Group', status: 'In Progress' as const, milestone: 'Site structure' },
+  { name: 'Art Design', area: 'HP', owners: 'Assigning', contributors: 'HP Core Group', status: 'In Progress' as const, milestone: 'Visual identity' },
+  { name: 'Stakeholder Framing', area: 'HP', owners: 'Assigning', contributors: 'HP Core Group', status: 'Assigning' as const, milestone: 'Stakeholder map' },
+];
 
-  const confirmedOwnersCount = pipelines.filter(p => p.status === 'Confirmed').length;
-
-  const tasksInProgressCount = pipelines.reduce((acc, p) => {
-    return acc + p.tasks.filter(t => t.status === 'In Progress').length;
-  }, 0);
-
-  const itemsAssigningCount = pipelines.filter(p => p.status === 'Assigning').length;
-
-  const integrationCriticalCount = pipelines.reduce((acc, p) => {
-    return acc + p.tasks.filter(t => t.priority === 'Critical').length;
-  }, 0);
-
-  // Prepare pipeline board data
-  const pipelineData = useMemo(() => {
-    return pipelines
-      .filter(p => !areaFilter || p.track === areaFilter)
-      .filter(p => !statusFilter || p.status === statusFilter)
-      .map(p => ({
-        pipeline: p.name,
-        area: p.track,
-        owners: p.owners.length > 0 ? p.owners.join(', ') : 'Assigning',
-        contributors: p.contributors.slice(0, 2).join(', ') + (p.contributors.length > 2 ? `, +${p.contributors.length - 2}` : ''),
-        status: <StatusBadge status={p.status} />,
-        milestone: p.lastUpdated,
-      }));
-  }, [areaFilter, statusFilter]);
-
-  // Prepare task data
-  const taskData = useMemo(() => {
-    const allTasks: Array<{
-      task: string;
-      pipeline: string;
-      owner: string;
-      contributors: string;
-      deadline: string;
-      status: React.ReactNode;
-      dependency: string;
-      notes: string;
-    }> = [];
-    pipelines.forEach(pipeline => {
-      pipeline.tasks.forEach(task => {
-        allTasks.push({
-          task: task.title,
-          pipeline: pipeline.name,
-          owner: task.owner || 'TBD',
-          contributors: task.contributors.join(', ') || '-',
-          deadline: task.dueDate,
-          status: <StatusBadge status={task.status as any} size="sm" />,
-          dependency: task.dependencies.length > 0 ? 'Yes' : 'No',
-          notes: task.blockers || task.notes || '-',
-        });
-      });
-    });
-    return allTasks.slice(0, 12);
-  }, []);
-
-  // Prepare student execution data
-  const studentData = useMemo(() => {
-    const studentMap = new Map();
-
-    // Build student info
-    teamMembers.forEach(member => {
-      if (!studentMap.has(member.name)) {
-        const majorTrack = member.tracks.find(t => t.affiliationType === 'Major')?.track;
-        const minorTrack = member.tracks.find(t => t.affiliationType === 'Minor')?.track;
-
-        studentMap.set(member.name, {
-          student: member.name,
-          majorTeam: majorTrack || 'HP',
-          minorTeam: minorTrack || '-',
-          focus: member.executionGroups?.[0] || member.dryLabTracks?.[0] || 'General',
-          role: member.executionGroups ? 'Execution Lead' : (member.dryLabTracks ? 'Track Lead' : 'Contributor'),
-          update: 'On schedule',
-        });
-      }
-    });
-
-    return Array.from(studentMap.values()).slice(0, 15);
-  }, []);
-
-  // Calculate instructor alerts
-  const pipelinesAtRisk = pipelines.filter(p => {
-    const hasBlociedTasks = p.tasks.some(t => t.blockers);
-    return p.status === 'Assigning' || hasBlociedTasks;
-  });
-
-  const tasksOverdue = pipelines.reduce((acc, p) => {
-    const today = new Date().toISOString().split('T')[0];
-    return acc + p.tasks.filter(t => t.dueDate < today && t.status !== 'Completed').length;
-  }, 0);
-
-  const unresolvedDeps = pipelines.reduce((acc, p) => {
-    return acc + p.tasks.filter(t => t.dependencies.length > 0 && t.status === 'Not Started').length;
-  }, 0);
-
-  const ownershipGaps = pipelines.filter(p => p.owners.length === 0).length;
-
-  const integrationBottlenecks = pipelines.reduce((acc, p) => {
-    return acc + p.tasks.filter(t => t.priority === 'Critical' && t.status === 'Not Started').length;
-  }, 0);
-
-  return (
-    <div>
-      <PageHeader
-        title="Ownership Dashboard"
-        subtitle="Operations Hub: Pipeline Ownership, Task Tracking & Execution Status"
-      />
-
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Summary Cards Row */}
-        <section className="mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <SummaryCard
-              title="Active Pipelines"
-              value={activePipelinesCount}
-              icon="📊"
-              color="blue"
-            />
-            <SummaryCard
-              title="Confirmed Owners"
-              value={confirmedOwnersCount}
-              subtitle="pipelines"
-              icon="✓"
-              color="emerald"
-            />
-            <SummaryCard
-              title="Tasks In Progress"
-              value={tasksInProgressCount}
-              icon="⚙️"
-              color="blue"
-            />
-            <SummaryCard
-              title="Items Being Assigned"
-              value={itemsAssigningCount}
-              subtitle="pipelines"
-              icon="👥"
-              color="amber"
-            />
-            <SummaryCard
-              title="Critical Tasks"
-              value={integrationCriticalCount}
-              icon="⚡"
-              color="amber"
-            />
-          </div>
-        </section>
-
-        {/* Filter Bar */}
-        <section className="mb-12">
-          <FilterBar
-            filters={[
-              {
-                label: 'Area',
-                options: [
-                  { label: 'Wetlab', value: 'Wetlab' },
-                  { label: 'Drylab', value: 'Drylab' },
-                  { label: 'HP', value: 'HP' },
-                ],
-                value: areaFilter,
-                onChange: setAreaFilter,
-              },
-              {
-                label: 'Status',
-                options: [
-                  { label: 'Confirmed', value: 'Confirmed' },
-                  { label: 'In Progress', value: 'In Progress' },
-                  { label: 'Assigning', value: 'Assigning' },
-                ],
-                value: statusFilter,
-                onChange: setStatusFilter,
-              },
-            ]}
-          />
-        </section>
-
-        {/* Pipeline Ownership Board */}
-        <section className="mb-16">
-          <SectionHeader
-            title="Pipeline Ownership Board"
-            description="Current ownership status and pipeline contributors"
-          />
-          <OwnershipTable
-            columns={[
-              { key: 'pipeline', label: 'Pipeline', sortable: true },
-              { key: 'area', label: 'Area', sortable: true },
-              { key: 'owners', label: 'Current Owner(s)', sortable: false },
-              { key: 'contributors', label: 'Contributors', sortable: false },
-              { key: 'status', label: 'Status', sortable: false },
-              { key: 'milestone', label: 'Last Updated', sortable: true },
-            ]}
-            data={pipelineData}
-          />
-        </section>
-
-        {/* Task Ownership Board */}
-        <section className="mb-16">
-          <SectionHeader
-            title="Task Ownership Board"
-            description="Critical and in-progress tasks with owners and dependencies"
-          />
-          <OwnershipTable
-            columns={[
-              { key: 'task', label: 'Task', sortable: true },
-              { key: 'pipeline', label: 'Pipeline', sortable: true },
-              { key: 'owner', label: 'Task Owner', sortable: true },
-              { key: 'contributors', label: 'Contributors', sortable: false },
-              { key: 'deadline', label: 'Deadline', sortable: true },
-              { key: 'status', label: 'Status', sortable: false },
-              { key: 'dependency', label: 'Has Dependency', sortable: false },
-              { key: 'notes', label: 'Notes', sortable: false },
-            ]}
-            data={taskData}
-          />
-        </section>
-
-        {/* Student Execution Table */}
-        <section className="mb-16">
-          <SectionHeader
-            title="Student Execution Table"
-            description="Team member assignments and current focus areas"
-          />
-          <OwnershipTable
-            columns={[
-              { key: 'student', label: 'Student', sortable: true },
-              { key: 'majorTeam', label: 'Major Team', sortable: true },
-              { key: 'minorTeam', label: 'Minor Team', sortable: true },
-              { key: 'focus', label: 'Current Focus', sortable: true },
-              { key: 'role', label: 'Ownership Role', sortable: true },
-              { key: 'update', label: 'Weekly Update', sortable: false },
-            ]}
-            data={studentData}
-          />
-        </section>
-
-        {/* Instructor Panel */}
-        <section>
-          <SectionHeader
-            title="Instructor Panel"
-            description="Key metrics and alerts requiring attention"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Pipelines At Risk</h3>
-              <p className="text-3xl font-bold text-amber-600 mb-2">{pipelinesAtRisk.length}</p>
-              <p className="text-sm text-slate-600">
-                {pipelinesAtRisk.length > 0 ? pipelinesAtRisk.map(p => p.name).join(', ') : 'All pipelines on track'}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Tasks Overdue</h3>
-              <p className="text-3xl font-bold text-red-600 mb-2">{tasksOverdue}</p>
-              <p className="text-sm text-slate-600">Tasks past deadline</p>
-            </div>
-
-            <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Unresolved Dependencies</h3>
-              <p className="text-3xl font-bold text-amber-600 mb-2">{unresolvedDeps}</p>
-              <p className="text-sm text-slate-600">Tasks waiting on dependencies</p>
-            </div>
-
-            <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Ownership Gaps</h3>
-              <p className="text-3xl font-bold text-amber-600 mb-2">{ownershipGaps}</p>
-              <p className="text-sm text-slate-600">Pipelines without assigned owners</p>
-            </div>
-
-            <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Integration Bottlenecks</h3>
-              <p className="text-3xl font-bold text-red-600 mb-2">{integrationBottlenecks}</p>
-              <p className="text-sm text-slate-600">Critical tasks not started</p>
-            </div>
-
-            <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Total Team Members</h3>
-              <p className="text-3xl font-bold text-blue-600 mb-2">{teamMembers.length}</p>
-              <p className="text-sm text-slate-600">Active team members</p>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
+const statusClasses: Record<Status, string> = {
+  'Confirmed': 'badge-confirmed',
+  'In Progress': 'badge-in-progress',
+  'Assigning': 'badge-assigning',
+  'Not Yet Filled': 'badge-not-filled',
 };
 
-export default OwnershipDashboardPage;
+const students = [
+  { name: 'Sara Chen', major: 'Wetlab', minor: 'HP', role: 'Lead, Stress Circuit Design' },
+  { name: 'Ethan Liu', major: 'Drylab', minor: 'Wetlab', role: 'Math Model & Hydroponic Systems' },
+  { name: 'Anton Lin', major: 'Drylab', minor: '', role: 'Hardware Lead, Sensors' },
+  { name: 'Jacquelyn', major: 'Drylab', minor: 'Wetlab', role: 'Gene Circuit Design' },
+  { name: 'Felix Yu', major: 'Drylab', minor: '', role: 'Electronics & CAD' },
+  { name: 'Anna Chuang', major: 'Drylab', minor: '', role: 'Modeling & Simulation' },
+  { name: 'Noah Tau', major: 'Drylab', minor: '', role: 'Hardware Integration' },
+  { name: 'Audrey Chu', major: 'Drylab', minor: 'Wetlab', role: 'Circuit Simulations' },
+];
+
+export default function OwnershipDashboardPage() {
+  const confirmedCount = pipelines.filter(p => p.status === 'Confirmed').length;
+  const inProgressCount = pipelines.filter(p => p.status === 'In Progress').length;
+  const assigningCount = pipelines.filter(p => p.status === 'Assigning').length;
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Page Header */}
+      <div style={{ background: 'linear-gradient(135deg, #0f2a05 0%, #2d6618 100%)' }} className="py-24 px-6">
+        <div className="max-w-4xl mx-auto text-center text-white">
+          <span className="inline-block bg-white/10 border border-white/20 rounded-full px-4 py-1 text-sm mb-6">
+            Oversight
+          </span>
+          <h1 className="text-5xl font-bold mb-4">Ownership Dashboard</h1>
+          <p className="text-xl text-white/80">Pipeline and task ownership at a glance</p>
+        </div>
+      </div>
+
+      <section className="py-20 px-6" style={{ backgroundColor: '#f8faf5' }}>
+        <div className="max-w-6xl mx-auto">
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-center">
+              <div className="text-3xl font-bold text-gray-900">{pipelines.length}</div>
+              <div className="text-sm text-gray-600 mt-1">Active Pipelines</div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-center">
+              <div className="text-3xl font-bold text-gray-900">{confirmedCount}</div>
+              <div className="text-sm text-gray-600 mt-1">Confirmed Owners</div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-center">
+              <div className="text-3xl font-bold text-gray-900">{inProgressCount}</div>
+              <div className="text-sm text-gray-600 mt-1">In Progress</div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-center">
+              <div className="text-3xl font-bold text-gray-900">{assigningCount}</div>
+              <div className="text-sm text-gray-600 mt-1">Being Assigned</div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-center">
+              <div className="text-3xl font-bold text-gray-900">4</div>
+              <div className="text-sm text-gray-600 mt-1">Integration Critical</div>
+            </div>
+          </div>
+
+          {/* Pipeline Table */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-12">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-200 bg-gray-50">
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Pipeline</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Area</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Owner(s)</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Contributors</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Next Milestone</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pipelines.map((p, idx) => (
+                    <tr key={idx} className="border-b border-slate-100 hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm font-semibold text-gray-900">{p.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{p.area}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{p.owners}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{p.contributors}</td>
+                      <td className="px-6 py-4 text-sm">
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${statusClasses[p.status]}`}>
+                          {p.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{p.milestone}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Student Execution Table */}
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Key Student Leads</h2>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-12">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-200 bg-gray-50">
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Student</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Major Team</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Minor Team</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-900">Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((s, idx) => (
+                    <tr key={idx} className="border-b border-slate-100 hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm font-semibold text-gray-900">{s.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{s.major}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{s.minor || '—'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{s.role}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Instructor Panel */}
+          <div style={{ background: '#1B1B1B' }} className="rounded-2xl p-8 text-white">
+            <h3 className="text-2xl font-bold mb-4">Instructor Overview</h3>
+            <div className="space-y-3 text-sm">
+              <p><span className="font-semibold">Ownership Gaps:</span> 6 pipelines still assigning owners</p>
+              <p><span className="font-semibold">Integration Milestone:</span> System convergence target Jun-Aug</p>
+              <p><span className="font-semibold">Critical Path:</span> Stress circuit + protectant + biosecurity switch</p>
+              <p><span className="font-semibold">Status:</span> No overdue critical tasks logged</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

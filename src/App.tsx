@@ -14,16 +14,16 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="overview" element={<ProjectOverviewPage />} />
-          <Route path="roadmap" element={<RoadmapPage />} />
-          <Route path="workstreams" element={<WorkstreamsPage />} />
-          <Route path="ownership" element={<OwnershipDashboardPage />} />
-          <Route path="updates" element={<WeeklyUpdatesPage />} />
-          <Route path="team" element={<TeamStructurePage />} />
-          <Route path="resources" element={<ResourcesPage />} />
-          <Route path="quick-view" element={<QuickViewPage />} />
+        <Route element={<Layout />}>
+          <Route path="/" index element={<HomePage />} />
+          <Route path="/overview" element={<ProjectOverviewPage />} />
+          <Route path="/roadmap" element={<RoadmapPage />} />
+          <Route path="/workstreams" element={<WorkstreamsPage />} />
+          <Route path="/ownership" element={<OwnershipDashboardPage />} />
+          <Route path="/updates" element={<WeeklyUpdatesPage />} />
+          <Route path="/team" element={<TeamStructurePage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/quick-view" element={<QuickViewPage />} />
         </Route>
       </Routes>
     </Router>

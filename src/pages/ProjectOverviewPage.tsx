@@ -1,420 +1,170 @@
-import React from 'react';
-import { PageHeader, SectionHeader } from '../components';
-import { getWorkstreamsByTrack } from '../data/workstreams';
+import { ArrowRight } from 'lucide-react';
 
-const ProjectOverviewPage: React.FC = () => {
-  const wetlabWorkstreams = getWorkstreamsByTrack('Wetlab');
-  const drylabWorkstreams = getWorkstreamsByTrack('Drylab');
-  const hpWorkstreams = getWorkstreamsByTrack('HP');
-
+export default function ProjectOverviewPage() {
   return (
-    <div>
-      <PageHeader title="Project Overview" />
-
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Problem Section */}
-        <section className="mb-16">
-          <SectionHeader
-            title="The Problem: Plant Abiotic Stress"
-            description="Why this challenge matters for agriculture and food security"
-          />
-          <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-8">
-            <p className="text-slate-700 leading-relaxed mb-6">
-              Plant abiotic stress—including drought, heat, cold, and nutrient deficiencies—poses one of
-              the greatest threats to global crop productivity. Climate change is intensifying the frequency
-              and severity of these stress events, making agricultural resilience increasingly critical.
-            </p>
-            <p className="text-slate-700 leading-relaxed mb-6">
-              Current approaches to plant protection rely heavily on:
-            </p>
-            <ul className="space-y-3 mb-6 ml-4">
-              <li className="flex gap-3">
-                <span className="text-blue-600 font-bold flex-shrink-0">•</span>
-                <span className="text-slate-700">
-                  <strong>Constitutive (continuous) protection:</strong> Applying treatments
-                  indiscriminately, which is costly, environmentally taxing, and often produces
-                  diminishing returns or phytotoxicity
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-blue-600 font-bold flex-shrink-0">•</span>
-                <span className="text-slate-700">
-                  <strong>Passive adaptation:</strong> Relying on slow conventional breeding, which is
-                  time-intensive and difficult to scale
-                </span>
-              </li>
-            </ul>
-            <p className="text-slate-700 leading-relaxed">
-              There is a critical need for a smarter, responsive system that can detect stress in real time
-              and activate protective mechanisms only when needed, minimizing waste and environmental impact.
-            </p>
-          </div>
-        </section>
-
-        {/* Central Idea */}
-        <section className="mb-16 bg-emerald-50 rounded-lg p-8 border border-emerald-200">
-          <SectionHeader
-            title="Our Central Idea: Threshold-Activated Support"
-            subtitle="Smart, responsive bioengineering"
-          />
-          <p className="text-slate-700 leading-relaxed mb-6">
-            We are engineering a safe, plant-associated bacterial system that <strong>senses plant stress
-            signals</strong> and <strong>activates protective compounds only above a defined stress
-            threshold</strong>.
-          </p>
-          <p className="text-slate-700 leading-relaxed">
-            This threshold-based approach ensures:
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-white rounded-lg p-4 border border-emerald-200">
-              <p className="font-bold text-emerald-900 mb-2">Efficiency</p>
-              <p className="text-sm text-slate-700">
-                Resources deployed only when plants genuinely need intervention
-              </p>
-            </div>
-            <div className="bg-white rounded-lg p-4 border border-emerald-200">
-              <p className="font-bold text-emerald-900 mb-2">Safety</p>
-              <p className="text-sm text-slate-700">
-                No continuous bioactivity; protective compounds remain dormant under normal conditions
-              </p>
-            </div>
-            <div className="bg-white rounded-lg p-4 border border-emerald-200">
-              <p className="font-bold text-emerald-900 mb-2">Sustainability</p>
-              <p className="text-sm text-slate-700">
-                Reduces chemical inputs and aligns with regenerative agriculture goals
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Engineering Logic */}
-        <section className="mb-16">
-          <SectionHeader
-            title="Engineering Logic: Why Threshold Over Constitutive?"
-            description="Comparative analysis of design approaches"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="rounded-lg border border-slate-200 shadow-sm overflow-hidden">
-              <div className="bg-red-50 border-b border-red-200 px-6 py-4">
-                <h3 className="font-bold text-red-900">Constitutive (Always-On)</h3>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3">
-                  <li className="flex gap-3">
-                    <span className="text-red-600 font-bold flex-shrink-0">✗</span>
-                    <span className="text-slate-700 text-sm">
-                      Constant metabolic burden on host organism
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-red-600 font-bold flex-shrink-0">✗</span>
-                    <span className="text-slate-700 text-sm">
-                      Unnecessary protection during optimal conditions
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-red-600 font-bold flex-shrink-0">✗</span>
-                    <span className="text-slate-700 text-sm">
-                      Risk of phytotoxicity from continuous high doses
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-red-600 font-bold flex-shrink-0">✗</span>
-                    <span className="text-slate-700 text-sm">
-                      Higher costs per application cycle
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-emerald-200 shadow-sm overflow-hidden">
-              <div className="bg-emerald-50 border-b border-emerald-200 px-6 py-4">
-                <h3 className="font-bold text-emerald-900">Threshold-Based (Smart Response)</h3>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-3">
-                  <li className="flex gap-3">
-                    <span className="text-emerald-600 font-bold flex-shrink-0">✓</span>
-                    <span className="text-slate-700 text-sm">
-                      Activates only when stress signals cross a set threshold
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-emerald-600 font-bold flex-shrink-0">✓</span>
-                    <span className="text-slate-700 text-sm">
-                      Minimal metabolic cost during normal growing conditions
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-emerald-600 font-bold flex-shrink-0">✓</span>
-                    <span className="text-slate-700 text-sm">
-                      Reduced risk of phytotoxicity through dose-matching
-                    </span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-emerald-600 font-bold flex-shrink-0">✓</span>
-                    <span className="text-slate-700 text-sm">
-                      Better alignment with real crop requirements
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Final Deliverable Callout */}
-        <section className="mb-16">
-          <div className="bg-gradient-to-r from-blue-600 to-emerald-600 rounded-lg p-8 text-white shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">The End Deliverable</h2>
-            <p className="text-lg leading-relaxed">
-              The end deliverable of the project is a <strong>Bacillus subtilis chassis</strong> containing:
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-              <div className="bg-white/10 rounded-lg p-4 backdrop-blur">
-                <p className="font-bold mb-2">1. Stress-Responsive Circuit</p>
-                <p className="text-sm">Engineered genetic circuit that detects plant stress signals</p>
-              </div>
-              <div className="bg-white/10 rounded-lg p-4 backdrop-blur">
-                <p className="font-bold mb-2">2. Biosecurity Switch</p>
-                <p className="text-sm">Control mechanism ensuring safe containment and limited proliferation</p>
-              </div>
-              <div className="bg-white/10 rounded-lg p-4 backdrop-blur">
-                <p className="font-bold mb-2">3. Optimized Protectant System</p>
-                <p className="text-sm">Validated protective compounds deployed only when threshold is met</p>
-              </div>
-            </div>
-            <p className="text-sm mt-6 border-t border-white/20 pt-4 opacity-90">
-              All components validated against a defined subject stress model in controlled laboratory
-              conditions before field trials.
-            </p>
-          </div>
-        </section>
-
-        {/* How the Project is Built: System Diagram */}
-        <section className="mb-16">
-          <SectionHeader
-            title="How the Project is Built"
-            subtitle="Integrated system architecture"
-            description="The project follows a modular pipeline architecture that converges toward final integration"
-          />
-
-          {/* System Flow Diagram */}
-          <div className="bg-slate-50 rounded-lg p-8 border border-slate-200 mb-8">
-            <div className="space-y-6">
-              {/* Input */}
-              <div className="flex items-center justify-center">
-                <div className="bg-blue-600 text-white font-bold px-6 py-4 rounded-lg text-center max-w-xs">
-                  <p className="text-sm mb-1">SUBJECT STRESS MODEL</p>
-                  <p className="text-lg">Plant abiotic stress environment</p>
-                </div>
-              </div>
-
-              {/* Arrow */}
-              <div className="flex justify-center">
-                <div className="w-1 h-8 bg-gradient-to-b from-blue-600 to-slate-400"></div>
-              </div>
-
-              {/* Stress Detection */}
-              <div className="flex items-center justify-center">
-                <div className="bg-blue-100 border-2 border-blue-600 text-blue-900 font-bold px-6 py-4 rounded-lg text-center max-w-xs">
-                  <p className="text-sm mb-1">STRESS-RESPONSE CIRCUIT</p>
-                  <p className="text-lg">Detects stress signals</p>
-                </div>
-              </div>
-
-              {/* Arrow */}
-              <div className="flex justify-center">
-                <div className="w-1 h-8 bg-gradient-to-b from-blue-400 to-slate-400"></div>
-              </div>
-
-              {/* Protection Module */}
-              <div className="flex items-center justify-center">
-                <div className="bg-emerald-100 border-2 border-emerald-600 text-emerald-900 font-bold px-6 py-4 rounded-lg text-center max-w-xs">
-                  <p className="text-sm mb-1">PROTECTANT MODULE</p>
-                  <p className="text-lg">Deploys protective compounds</p>
-                </div>
-              </div>
-
-              {/* Arrow with biosecurity note */}
-              <div className="flex justify-between items-start gap-4">
-                <div className="flex-1 flex flex-col items-center">
-                  <div className="w-1 h-8 bg-gradient-to-b from-emerald-400 to-slate-400"></div>
-                </div>
-                <div className="bg-amber-50 border border-amber-200 rounded px-3 py-2 text-xs text-amber-900 font-semibold max-w-48 text-center">
-                  BIOSECURITY SWITCH monitors &amp; controls
-                </div>
-                <div className="flex-1 flex flex-col items-center">
-                  <div className="w-1 h-8 bg-gradient-to-b from-emerald-400 to-slate-400"></div>
-                </div>
-              </div>
-
-              {/* Biosecurity */}
-              <div className="flex items-center justify-center">
-                <div className="bg-amber-100 border-2 border-amber-600 text-amber-900 font-bold px-6 py-4 rounded-lg text-center max-w-xs">
-                  <p className="text-sm mb-1">BIOSECURITY CONTROL</p>
-                  <p className="text-lg">Ensures safe containment</p>
-                </div>
-              </div>
-
-              {/* Arrow */}
-              <div className="flex justify-center">
-                <div className="w-1 h-8 bg-gradient-to-b from-amber-400 to-slate-400"></div>
-              </div>
-
-              {/* Final Output */}
-              <div className="flex items-center justify-center">
-                <div className="bg-green-600 text-white font-bold px-6 py-4 rounded-lg text-center max-w-xs">
-                  <p className="text-sm mb-1">INTEGRATED B. SUBTILIS SYSTEM</p>
-                  <p className="text-lg">Validated stress-response chassis</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-slate-700 text-center italic">
-            All modules are engineered in parallel, with continuous integration feedback
-          </p>
-        </section>
-
-        {/* Parallel Build Logic */}
-        <section className="mb-16">
-          <SectionHeader
-            title="Parallel Build Logic"
-            subtitle="Four integrated workstream tracks"
-            description="Wetlab, Drylab, and HP teams execute in parallel with synchronized milestones"
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Wetlab Track */}
-            <div className="rounded-lg border-2 border-blue-300 shadow-sm overflow-hidden">
-              <div className="bg-blue-100 border-b-2 border-blue-300 px-6 py-4">
-                <h3 className="font-bold text-blue-900 text-lg">WETLAB</h3>
-                <p className="text-blue-700 text-xs mt-1">{wetlabWorkstreams.length} Workstreams</p>
-              </div>
-              <div className="p-6 space-y-3">
-                {wetlabWorkstreams.map((ws) => (
-                  <div key={ws.id} className="text-sm">
-                    <p className="font-semibold text-slate-900">{ws.name}</p>
-                    <p className="text-xs text-slate-500 mt-1">{ws.status}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Drylab Track */}
-            <div className="rounded-lg border-2 border-emerald-300 shadow-sm overflow-hidden">
-              <div className="bg-emerald-100 border-b-2 border-emerald-300 px-6 py-4">
-                <h3 className="font-bold text-emerald-900 text-lg">DRYLAB</h3>
-                <p className="text-emerald-700 text-xs mt-1">{drylabWorkstreams.length} Workstreams</p>
-              </div>
-              <div className="p-6 space-y-3">
-                {drylabWorkstreams.map((ws) => (
-                  <div key={ws.id} className="text-sm">
-                    <p className="font-semibold text-slate-900">{ws.name}</p>
-                    <p className="text-xs text-slate-500 mt-1">{ws.status}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* HP Track */}
-            <div className="rounded-lg border-2 border-amber-300 shadow-sm overflow-hidden">
-              <div className="bg-amber-100 border-b-2 border-amber-300 px-6 py-4">
-                <h3 className="font-bold text-amber-900 text-lg">HUMAN PRACTICE</h3>
-                <p className="text-amber-700 text-xs mt-1">{hpWorkstreams.length} Workstreams</p>
-              </div>
-              <div className="p-6 space-y-3">
-                {hpWorkstreams.map((ws) => (
-                  <div key={ws.id} className="text-sm">
-                    <p className="font-semibold text-slate-900">{ws.name}</p>
-                    <p className="text-xs text-slate-500 mt-1">{ws.status}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Integration Point */}
-            <div className="rounded-lg border-2 border-slate-300 bg-slate-50 shadow-sm overflow-hidden">
-              <div className="bg-slate-200 border-b-2 border-slate-300 px-6 py-4">
-                <h3 className="font-bold text-slate-900 text-lg">INTEGRATION</h3>
-                <p className="text-slate-600 text-xs mt-1">Data Flow Hub</p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-2 text-sm text-slate-700">
-                  <li className="flex gap-2">
-                    <span className="font-bold">•</span>
-                    <span>Cross-track sync meetings</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-bold">•</span>
-                    <span>Shared parameter database</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-bold">•</span>
-                    <span>Milestone convergence</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-bold">•</span>
-                    <span>Final validation</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Why iGEM */}
-        <section className="mb-16 bg-slate-50 rounded-lg p-8 border border-slate-200">
-          <SectionHeader
-            title="Why This Is an iGEM Project"
-            description="Alignment with the iGEM mission and values"
-          />
-
-          <div className="space-y-6">
-            <div>
-              <h3 className="font-bold text-slate-900 text-lg mb-2">Synthetic Biology Innovation</h3>
-              <p className="text-slate-700 leading-relaxed">
-                We are applying foundational synthetic biology principles—modular design, genetic
-                circuit engineering, and standardized biological parts—to create a novel solution for
-                an agricultural challenge. Our approach mirrors the iGEM philosophy of turning
-                engineering principles into biological systems.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-slate-900 text-lg mb-2">Safety & Security First</h3>
-              <p className="text-slate-700 leading-relaxed">
-                Our biosecurity switch and threshold-based activation embody the iGEM commitment to
-                responsible innovation. We design containment and control into our system from the
-                start, ensuring safe deployment and preventing unintended environmental impacts.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-slate-900 text-lg mb-2">Real-World Impact</h3>
-              <p className="text-slate-700 leading-relaxed">
-                Rather than working solely in laboratory abstractions, we ground our project in the
-                tangible challenges farmers face with climate-driven stress. Our human practice track
-                ensures stakeholder engagement and implementation feasibility from day one.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-slate-900 text-lg mb-2">Interdisciplinary Collaboration</h3>
-              <p className="text-slate-700 leading-relaxed">
-                Our integrated Wetlab, Drylab, and HP structure mirrors the iGEM ethos of
-                interdisciplinary teamwork. Engineers, biologists, and social scientists work
-                together to build a solution that is scientifically sound, technically feasible, and
-                socially responsible.
-              </p>
-            </div>
-          </div>
-        </section>
+    <div className="min-h-screen bg-white">
+      {/* Page Header */}
+      <div style={{ background: 'linear-gradient(135deg, #0f2a05 0%, #2d6618 100%)' }} className="py-24 px-6">
+        <div className="max-w-4xl mx-auto text-center text-white">
+          <span className="inline-block bg-white/10 border border-white/20 rounded-full px-4 py-1 text-sm mb-6">
+            Foundation
+          </span>
+          <h1 className="text-5xl font-bold mb-4">Project Overview</h1>
+          <p className="text-xl text-white/80">The science and engineering behind our system</p>
+        </div>
       </div>
+
+      {/* Problem Card Section */}
+      <section className="py-20 px-6" style={{ backgroundColor: '#f8faf5' }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-12">
+            <h2 className="text-4xl font-bold mb-6 text-gray-900">Why Plant Abiotic Stress Matters</h2>
+            <p className="text-lg text-gray-700 mb-8">
+              Abiotic stresses—drought, extreme heat, and salinity—devastate global crop yields annually.
+              These environmental pressures affect food security for over 800 million people and impose massive
+              economic costs on agricultural systems worldwide.
+            </p>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 border border-emerald-200">
+                <div className="text-4xl font-bold text-emerald-700 mb-2">70%</div>
+                <div className="text-gray-700">Crop loss from abiotic stress annually</div>
+              </div>
+              <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200">
+                <div className="text-4xl font-bold text-amber-700 mb-2">800M+</div>
+                <div className="text-gray-700">Food-insecure people affected</div>
+              </div>
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+                <div className="text-4xl font-bold text-blue-700 mb-2">$300B</div>
+                <div className="text-gray-700">Annual economic loss</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Approach Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-12 text-gray-900">Our Approach</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Explanation */}
+            <div>
+              <h3 className="text-3xl font-bold mb-6 text-gray-900">Threshold-Activated Protection</h3>
+              <p className="text-lg text-gray-700 mb-4">
+                We're engineering a biological system that detects when plant stress exceeds a critical threshold
+                and automatically triggers protective responses. The system remains dormant under normal conditions,
+                activating only when truly needed.
+              </p>
+              <p className="text-lg text-gray-700">
+                This threshold-based logic mimics natural plant resilience mechanisms, ensuring minimal metabolic
+                overhead while providing robust protection when conditions become extreme.
+              </p>
+            </div>
+
+            {/* Right: Logic Diagram Card */}
+            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 border border-emerald-200">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-emerald-700">
+                    1
+                  </div>
+                  <div className="text-gray-800 font-semibold">Stress Detected</div>
+                </div>
+
+                <div className="flex justify-center">
+                  <div className="w-1 h-8 bg-emerald-700"></div>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border-2 border-emerald-700">
+                  <div className="font-bold text-emerald-700 text-center">Threshold Crossed?</div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className="w-1 h-6 bg-emerald-700"></div>
+                    <div className="text-sm font-bold text-emerald-700">Yes</div>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="w-1 h-6 bg-gray-400"></div>
+                    <div className="text-sm font-bold text-gray-500">No</div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-emerald-600 text-white rounded-lg p-4 text-center font-semibold">
+                    Activate Protection
+                  </div>
+                  <div className="bg-gray-300 text-gray-600 rounded-lg p-4 text-center font-semibold">
+                    Remain Dormant
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Deliverable Callout */}
+      <section className="py-20 px-6" style={{ backgroundColor: '#f8faf5' }}>
+        <div className="max-w-6xl mx-auto">
+          <div style={{ background: '#0f2a05' }} className="rounded-2xl p-12 text-white">
+            <h3 className="text-2xl font-bold mb-4">The End Deliverable</h3>
+            <p className="text-lg leading-relaxed">
+              A <span className="font-semibold">Bacillus subtilis chassis</span> containing a stress-responsive circuit,
+              a biosecurity switch, and an optimized protectant system, validated against a defined subject stress model.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* System Architecture */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-12 text-gray-900">System Architecture</h2>
+          <div className="overflow-x-auto pb-4">
+            <div className="flex gap-4 min-w-max">
+              {[
+                { label: 'Subject Stress Model', color: 'from-blue-500 to-blue-600' },
+                { label: 'Stress-Response Circuit', color: 'from-emerald-500 to-emerald-600' },
+                { label: 'Protectant Module', color: 'from-amber-500 to-amber-600' },
+                { label: 'Biosecurity Switch', color: 'from-red-500 to-red-600' },
+                { label: 'Final Integrated Validation', color: 'from-purple-500 to-purple-600' },
+              ].map((box, idx) => (
+                <div key={idx} className="flex items-center gap-4">
+                  <div className={`bg-gradient-to-br ${box.color} rounded-lg p-6 text-white font-semibold text-center min-w-max flex-shrink-0`}>
+                    <div className="w-40">{box.label}</div>
+                  </div>
+                  {idx < 4 && (
+                    <ArrowRight className="text-gray-400 flex-shrink-0" size={24} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why iGEM */}
+      <section className="py-20 px-6" style={{ backgroundColor: '#f8faf5' }}>
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-12 text-gray-900">Why iGEM</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: 'Engineering Iteration', desc: 'Build, test, learn, and refine across cycles' },
+              { title: 'Measurable Performance', desc: 'Quantify every step with rigorous validation' },
+              { title: 'Responsible Implementation', desc: 'Integrate safety, ethics, and security from day one' },
+              { title: 'Human-Centered Design', desc: 'Engage stakeholders and design for real impact' },
+            ].map((card, idx) => (
+              <div key={idx} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{card.title}</h3>
+                <p className="text-gray-700">{card.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
-};
-
-export default ProjectOverviewPage;
+}

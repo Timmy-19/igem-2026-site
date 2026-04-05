@@ -9,4 +9,5 @@ export { default as SectionHeader } from './SectionHeader';
 export { default as FilterBar } from './FilterBar';
 export { default as PageHeader } from './PageHeader';
 export { default as Navbar } from './Navbar';
+export { default as Footer } from './Footer';
 export { default as Layout } from './Layout';
