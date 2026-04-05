@@ -132,32 +132,32 @@ const HomePage = () => {
       </section>
 
       {/* ============ SECTION 2: FEATURES MARQUEE ============ */}
-      <section className="w-full bg-white py-16 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="w-full bg-white py-16 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#1B1B1B]"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             What Makes Our System Different
           </h2>
+        </div>
 
-          {/* Marquee Container */}
-          <div className="relative w-full overflow-hidden">
-            <div className="marquee-track flex gap-6">
-              {/* Repeat features 4x for seamless loop */}
-              {Array.from({ length: 4 }).map((_, repeatIdx) =>
-                features.map((feature, idx) => (
-                  <div
-                    key={`${repeatIdx}-${idx}`}
-                    className="flex-shrink-0 min-w-52 bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow"
-                  >
-                    <p className="text-3xl mb-2">{feature.emoji}</p>
-                    <h3 className="font-bold text-[#1B1B1B] mb-2">{feature.title}</h3>
-                    <p className="text-sm text-slate-600">{feature.desc}</p>
-                  </div>
-                ))
-              )}
-            </div>
+        {/* Marquee Container — full width, overflow hidden */}
+        <div className="relative w-full overflow-hidden">
+          <div className="marquee-track flex gap-6">
+            {/* Repeat features 4x for seamless loop */}
+            {Array.from({ length: 4 }).map((_, repeatIdx) =>
+              features.map((feature, idx) => (
+                <div
+                  key={`${repeatIdx}-${idx}`}
+                  className="flex-shrink-0 w-56 bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow"
+                >
+                  <p className="text-3xl mb-2">{feature.emoji}</p>
+                  <h3 className="font-bold text-[#1B1B1B] mb-2">{feature.title}</h3>
+                  <p className="text-sm text-slate-600">{feature.desc}</p>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </section>

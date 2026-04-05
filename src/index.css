@@ -17,13 +17,17 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
 body {
   font-family: 'Urbanist', system-ui, -apple-system, sans-serif;
   background-color: #f8faf5;
   color: #1B1B1B;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -39,7 +43,11 @@ h1, h2, h3, h4, h5, h6 {
   0% { transform: translateX(0); }
   100% { transform: translateX(-25%); }
 }
-.marquee-track { animation: marquee-loop 40s linear infinite; will-change: transform; }
+.marquee-track {
+  animation: marquee-loop 40s linear infinite;
+  will-change: transform;
+  width: max-content;
+}
 
 /* Fade in up animation */
 @keyframes fadeInUp {
